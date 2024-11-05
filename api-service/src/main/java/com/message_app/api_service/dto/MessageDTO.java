@@ -8,6 +8,12 @@ public class MessageDTO {
   private LocalDateTime postedAt;
   private String message;
 
+  public MessageDTO(Long id, LocalDateTime postedAt, String message) {
+    this.id = id;
+    this.postedAt = postedAt;
+    this.message = message;
+  }
+
   public Long getId() {
     return id;
   }

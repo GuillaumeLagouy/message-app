@@ -1,12 +1,18 @@
 services:
+  
   frontend:
-    build:
-      context: ./frontend
+    build: ./frontend
+    container_name: frontend_container
     ports:
-      - "3000:80"
-    networks:
-      - message-net
-
-networks:
-  message-net:
-    driver: bridge
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    stdin_open: true
+    tty: true
+  
+  api-service:
+    build:
+      context: ./api-service
+    ports:
+     - "8080:8080"
