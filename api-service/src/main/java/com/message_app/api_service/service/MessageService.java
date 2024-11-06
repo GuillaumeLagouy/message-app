@@ -15,14 +15,14 @@ public class MessageService {
 
   public MessageService() {
     mockMessages.add(
-      new MessageDTO(1L, LocalDateTime.now(), "Bonjour ceci est un message")
+      new MessageDTO(1, LocalDateTime.now(), "Bonjour ceci est un message")
     );
     mockMessages.add(
-      new MessageDTO(2L, LocalDateTime.now(), "Ceci est un autre message")
+      new MessageDTO(2, LocalDateTime.now(), "Ceci est un autre message")
     );
   }
 
-  public Optional<MessageDTO> getMessageById(Long id) {
+  public Optional<MessageDTO> getMessageById(Integer id) {
     return mockMessages
       .stream()
       .filter(message -> message.getId().equals(id))

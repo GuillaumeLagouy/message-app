@@ -1,18 +1,21 @@
-package com.message_app.api_service.dto;
+package com.message_app.backend_service.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
-public class MessageDTO {
+@Entity
+public class MessageEntity {
 
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id;
-  private LocalDateTime postedAt;
-  private String message;
 
-  public MessageDTO(Integer id, LocalDateTime postedAt, String message) {
-    this.id = id;
-    this.postedAt = postedAt;
-    this.message = message;
-  }
+  private LocalDateTime postedAt;
+
+  private String message;
 
   public Integer getId() {
     return id;
