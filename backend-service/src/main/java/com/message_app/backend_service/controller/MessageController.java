@@ -25,7 +25,7 @@ public class MessageController {
     m.setMessage(message);
     messageRepository.save(m);
 
-    return "Saved";
+    return "Saved !";
   }
 
   @GetMapping(path = "/all")

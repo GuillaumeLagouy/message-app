@@ -19,6 +19,9 @@ services:
         SERVICE_NAME: "api-service"
     ports:
      - "8080:8080"
+    volumes:
+      - ./api-service:/app/api-service
+      - /app/api-service/node_modules
 
   backend-service:
     build:
@@ -28,6 +31,9 @@ services:
         SERVICE_NAME: "backend-service"
     ports:
       - "8081:8081"
+    volumes:
+      - ./backend-service:/app/backend-service
+      - /app/backend-service/node_modules
   
   mysql:
     container_name: 'mysql-container'

@@ -6,20 +6,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 
 @Service
 public class MessageService {
 
+  private final WebClient webClient;
+
   // Liste temporaire de messages pour simuler l'existence d'un backend
   private List<MessageDTO> mockMessages = new ArrayList<>();
 
-  public MessageService() {
-    mockMessages.add(
-      new MessageDTO(1, LocalDateTime.now(), "Bonjour ceci est un message")
-    );
-    mockMessages.add(
-      new MessageDTO(2, LocalDateTime.now(), "Ceci est un autre message")
-    );
+  public MessageService(WebClient.Builder webClientBuilder) {
+    this.webClient = (WebClient) webClientBuilder
+      .baseUrl("http://backend-service:8081")
+      .build();
   }
 
   public Optional<MessageDTO> getMessageById(Integer id) {
@@ -29,8 +30,12 @@ public class MessageService {
       .findFirst();
   }
 
-  public List<MessageDTO> getAllMessages() {
-    return mockMessages;
+  public Flux<MessageDTO> getAllMessages() {
+    return webClient
+      .get()
+      .uri("/messages/all")
+      .retrieve()
+      .bodyToFlux(MessageDTO.class);
   }
 
   public void createMessage(String message) {

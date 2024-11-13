@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 
 @RestController
 public class MessageController {
@@ -15,7 +16,7 @@ public class MessageController {
 
   @GetMapping("/messages")
   @CrossOrigin(origins = "http://localhost:3000")
-  public Iterable<MessageDTO> getAllMessages() {
+  public Flux<MessageDTO> getAllMessages() {
     return messageService.getAllMessages();
   }
 }
