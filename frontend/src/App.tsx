@@ -23,12 +23,12 @@ function App() {
   }, []); // [] pour que l'effet ne s'exécute qu'une seule fois
 
   if (error) {
-    return <p>Erreur : {error}</p>;
+    return <p className="border-2 border-red-500">Erreur : {error}</p>;
   }
 
   return (
     <div>
-      <h1>Liste des messages</h1>
+      <h1 className="border-2 border-red-500">Liste des messages</h1>
       <ul>
         {messages.map((message) => (
           <li key={message.id}>{message.message}</li>
