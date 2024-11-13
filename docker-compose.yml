@@ -13,6 +13,29 @@ services:
   
   api-service:
     build:
-      context: ./api-service
+      context: .
+      dockerfile: ./base/Dockerfile
+      args:
+        SERVICE_NAME: "api-service"
     ports:
      - "8080:8080"
+
+  backend-service:
+    build:
+      context: .
+      dockerfile: ./base/Dockerfile
+      args:
+        SERVICE_NAME: "backend-service"
+    ports:
+      - "8081:8081"
+  
+  mysql:
+    container_name: 'mysql-container'
+    image: 'mysql:latest'
+    environment:
+      - 'MYSQL_DATABASE=messageappdatabase'
+      - 'MYSQL_PASSWORD=secret'
+      - 'MYSQL_ROOT_PASSWORD=verysecret'
+      - 'MYSQL_USER=myuser'
+    ports:
+      - '3306:3306'
