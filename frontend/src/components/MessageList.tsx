@@ -6,7 +6,11 @@ type Message = {
   message: string;
 };
 
-export default function MessageList() {
+type MessageListProps = {
+  hasSent: number;
+};
+
+export default function MessageList({ hasSent }: MessageListProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [error, setError] = useState(null);
 
@@ -21,7 +25,7 @@ export default function MessageList() {
       })
       .then((data) => setMessages(data))
       .catch((err) => setError(err.message));
-  }, []);
+  }, [hasSent]);
 
   if (error) {
     return <p className="border-2 border-red-500">Erreur : {error}</p>;
