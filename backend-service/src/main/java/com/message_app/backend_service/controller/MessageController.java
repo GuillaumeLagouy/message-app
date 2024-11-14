@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -19,10 +19,12 @@ public class MessageController {
   private MessageRepository messageRepository;
 
   @PostMapping(path = "/create")
-  public @ResponseBody String createNewMessage(@RequestParam String message) {
+  public @ResponseBody String createNewMessage(
+    @RequestBody MessageRequest request
+  ) {
     MessageEntity m = new MessageEntity();
     m.setPostedAt(LocalDateTime.now());
-    m.setMessage(message);
+    m.setMessage(request.getContent());
     messageRepository.save(m);
 
     return "Saved !";

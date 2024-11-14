@@ -1,13 +1,14 @@
 package com.message_app.api_service.service;
 
 import com.message_app.api_service.dto.MessageDTO;
-import java.time.LocalDateTime;
+import com.message_app.api_service.dto.MessageRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 public class MessageService {
@@ -38,7 +39,12 @@ public class MessageService {
       .bodyToFlux(MessageDTO.class);
   }
 
-  public void createMessage(String message) {
-    mockMessages.add(new MessageDTO(null, LocalDateTime.now(), message));
+  public Mono<Void> createMessage(MessageRequest request) {
+    return webClient
+      .post()
+      .uri("/messages/create")
+      .bodyValue(request)
+      .retrieve()
+      .bodyToMono(Void.class);
   }
 }
