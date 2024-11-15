@@ -1,4 +1,6 @@
-export async function postMessage(data: { content: string }) {
+import { Message } from '../types/MessageType';
+
+export async function postMessage(data: { content: string }): Promise<Message> {
   const response = await fetch('http://localhost:8080/message', {
     method: 'POST',
     headers: {
@@ -6,7 +8,6 @@ export async function postMessage(data: { content: string }) {
     },
     body: JSON.stringify(data),
   });
-
   if (!response.ok) {
     throw new Error('Failed to send message');
   }
@@ -15,12 +16,12 @@ export async function postMessage(data: { content: string }) {
   return responseBody ? JSON.parse(responseBody) : null;
 }
 
-export async function getMessages() {
+export async function getMessages(): Promise<Message[]> {
   const response = await fetch('http://localhost:8080/messages');
 
   if (!response.ok) {
     throw new Error('Failed to retrieve messages');
   }
 
-  return response;
+  return response.json();
 }

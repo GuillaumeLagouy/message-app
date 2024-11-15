@@ -29,7 +29,7 @@ public class MessageController {
   @PostMapping("/message")
   @CrossOrigin(origins = "http://localhost:3000")
   @ResponseStatus(HttpStatus.CREATED)
-  public Mono<Void> createMessage(@RequestBody MessageRequest messageRequest) {
+  public Mono<MessageDTO> createMessage(@RequestBody MessageRequest messageRequest) {
     return messageService.createMessage(messageRequest);
   }
 }

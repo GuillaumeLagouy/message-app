@@ -39,12 +39,12 @@ public class MessageService {
       .bodyToFlux(MessageDTO.class);
   }
 
-  public Mono<Void> createMessage(MessageRequest request) {
+  public Mono<MessageDTO> createMessage(MessageRequest request) {
     return webClient
       .post()
       .uri("/messages/create")
       .bodyValue(request)
       .retrieve()
-      .bodyToMono(Void.class);
+      .bodyToMono(MessageDTO.class);
   }
 }

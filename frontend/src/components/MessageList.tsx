@@ -1,35 +1,10 @@
-import { useEffect, useState } from 'react';
-import { getMessages } from '../services/apiService';
+import { Message } from '../types/MessageType';
 
-type Message = {
-  id: number;
-  message: string;
-};
+interface MessageListProps {
+  messages: Message[];
+}
 
-type MessageListProps = {
-  hasSent: number;
-};
-
-export default function MessageList({ hasSent }: MessageListProps) {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    getMessages()
-      .then((response) => {
-        console.log('Response Status:', response.status);
-        if (!response.ok) {
-          throw new Error('Erreur de réseau');
-        }
-        return response.json();
-      })
-      .then((data) => setMessages(data))
-      .catch((err) => setError(err.message));
-  }, [hasSent]);
-
-  if (error) {
-    return <p className="border-2 border-red-500">Erreur : {error}</p>;
-  }
+export default function MessageList({ messages }: MessageListProps) {
   return (
     <div>
       <h1>Liste des messages</h1>

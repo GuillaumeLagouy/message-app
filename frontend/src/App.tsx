@@ -1,21 +1,15 @@
-import { useState } from 'react';
 import './App.css';
 import MessageForm from './components/MessageForm';
 import MessageList from './components/MessageList';
+import { useMessages } from './hooks/useMessages';
 
 function App() {
-  const [hasSent, setHasSent] = useState<number>(0);
-
-  const handleNewMessage = () => {
-    // Passer l'état à true puis à false (le processus ne doit pas être bloquant)
-    // TODO : À revoir
-    setHasSent((prevCount) => prevCount + 1);
-  };
+  const { messages, sendMessage } = useMessages();
 
   return (
     <div>
-      <MessageForm onMessageSent={handleNewMessage} />
-      <MessageList hasSent={hasSent} />
+      <MessageForm onSendMessage={sendMessage} />
+      <MessageList messages={messages} />
     </div>
   );
 }
