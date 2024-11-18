@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Message } from '../types/MessageType';
-import { getMessages, postMessage } from '../services/apiService';
+import {
+  getMessages,
+  postMessage,
+  updateMessage,
+} from '../services/apiService';
 
 export function useMessages() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -15,6 +19,7 @@ export function useMessages() {
     }
   }, []);
 
+  // TODO À voir si pas mieux dans app
   useEffect(() => {
     loadMessages();
   }, [loadMessages]);
@@ -30,5 +35,16 @@ export function useMessages() {
     }
   };
 
-  return { messages, sendMessage };
+  const editMessage = async (id: number, content: string) => {
+    try {
+      await updateMessage({ id: id, content: content });
+      await loadMessages();
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  };
+
+  return { messages, sendMessage, editMessage };
 }

@@ -18,6 +18,8 @@ import {
 } from './ui/form';
 import { Textarea } from './ui/textarea';
 import { Button } from './ui/button';
+import { useEffect } from 'react';
+import { Message } from '@/types/MessageType';
 
 const formSchema = z.object({
   content: z.string().min(1, { message: 'The content field is required' }),
@@ -25,9 +27,17 @@ const formSchema = z.object({
 
 interface MessageFormProps {
   onSendMessage: (message: string) => Promise<boolean>;
+  onEditMessage: (id: number, message: string) => Promise<boolean>;
+  initialMessage?: Message;
+  resetInitialMessage: () => void;
 }
 
-export default function MessageForm({ onSendMessage }: MessageFormProps) {
+export default function MessageForm({
+  onSendMessage,
+  onEditMessage,
+  initialMessage,
+  resetInitialMessage,
+}: MessageFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -36,11 +46,25 @@ export default function MessageForm({ onSendMessage }: MessageFormProps) {
   });
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
-    const success = await onSendMessage(data.content);
+    let success = false;
+
+    if (initialMessage) {
+      success = await onEditMessage(initialMessage.id, data.content);
+      resetInitialMessage();
+    } else {
+      success = await onSendMessage(data.content);
+    }
+
     if (success) {
       form.reset();
     }
   }
+
+  useEffect(() => {
+    if (initialMessage) {
+      form.setValue('content', initialMessage.message);
+    }
+  }, [initialMessage, form.setValue, form]);
 
   return (
     <Card>
@@ -68,7 +92,9 @@ export default function MessageForm({ onSendMessage }: MessageFormProps) {
                 </FormItem>
               )}
             />
-            <Button type="submit">Send</Button>
+            <Button type="submit">
+              {initialMessage?.message ? 'Modify' : 'Send'}
+            </Button>
           </form>
         </Form>
       </CardContent>
