@@ -47,4 +47,13 @@ public class MessageService {
       .retrieve()
       .bodyToMono(MessageDTO.class);
   }
+
+  public Mono<MessageDTO> updateMessage(Integer id, MessageRequest request) {
+    return webClient
+      .put()
+      .uri("/messages/update/{id}", id)
+      .bodyValue(request)
+      .retrieve()
+      .bodyToMono(MessageDTO.class);
+  }
 }
