@@ -4,7 +4,9 @@ import com.message_app.api_service.dto.MessageDTO;
 import com.message_app.api_service.dto.MessageRequest;
 import com.message_app.api_service.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +24,12 @@ public class MessageController {
   @Autowired
   private MessageService messageService;
 
+  @Autowired
+  private KafkaTemplate<String, String> kafkaTemplate;
+
+  @Value(value = "${spring.kafka.topic}")
+  private String topicName;
+
   @GetMapping("/messages")
   @CrossOrigin(origins = "http://localhost:3000")
   public Flux<MessageDTO> getAllMessages() {
@@ -34,7 +42,9 @@ public class MessageController {
   public Mono<MessageDTO> createMessage(
     @RequestBody MessageRequest messageRequest
   ) {
-    return messageService.createMessage(messageRequest);
+
+    return Mono.fromFuture(kafkaTemplate.send(topicName, messageRequest.getContent()))
+        .then(messageService.createMessage(messageRequest));
   }
 
   @PutMapping("/message/{id}")
