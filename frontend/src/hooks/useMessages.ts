@@ -26,7 +26,7 @@ export function useMessages() {
 
   const sendMessage = async (content: string) => {
     try {
-      await postMessage({ content: content });
+      await postMessage(content);
       await loadMessages();
       return true;
     } catch (error) {
