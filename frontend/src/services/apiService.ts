@@ -1,19 +1,18 @@
 import { Message } from '../types/MessageType';
 
-export async function postMessage(data: { content: string }): Promise<Message> {
+export async function postMessage(content: string): Promise<string> {
   const response = await fetch('http://localhost:8080/message', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify(content),
   });
   if (!response.ok) {
     throw new Error('Failed to send message');
   }
 
-  const responseBody = await response.text();
-  return responseBody ? JSON.parse(responseBody) : null;
+  return await response.text();
 }
 
 export async function updateMessage(data: {
