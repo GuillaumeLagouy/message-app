@@ -1,5 +1,6 @@
 package com.message_app.backend_service.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,6 +14,10 @@ public class MessageEntity {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id;
 
+  @JsonFormat(
+    shape = JsonFormat.Shape.STRING,
+    pattern = "yyyy-MM-dd'T'HH:mm:ss"
+  )
   private LocalDateTime postedAt;
 
   private String message;

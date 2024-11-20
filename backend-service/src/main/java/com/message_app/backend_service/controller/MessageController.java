@@ -1,18 +1,13 @@
 package com.message_app.backend_service.controller;
 
-import com.message_app.backend_service.dto.MessageDTO;
+import com.message_app.backend_service.dto.MessageKafkaRequest;
 import com.message_app.backend_service.entity.MessageEntity;
 import com.message_app.backend_service.repository.MessageRepository;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -23,37 +18,48 @@ public class MessageController {
   @Autowired
   private MessageRepository messageRepository;
 
-  @KafkaListener(topics = "message-topic", groupId = "backend-consumer")
-  public void listenGroupBackend(String message) {
-    MessageEntity messageEntity = new MessageEntity();
-    messageEntity.setPostedAt(LocalDateTime.now());
-    messageEntity.setMessage(message);
+  @KafkaListener(topics = "message-topic", groupId = "backend-consumer", containerFactory = "kafkaListenerContainerFactory")
+  public void listenMessage(MessageKafkaRequest request) {
+    if(request.getId() != null) {
+      MessageEntity messageEntity = messageRepository.findById(request.getId().orElse(null)).orElse(null);
+      if (messageEntity != null) {
+        messageEntity.setPostedAt(LocalDateTime.now());
+        messageEntity.setMessage(request.getContent());
 
-    messageRepository.save(messageEntity);
-  }
-
-  @PutMapping("/update/{id}")
-  public @ResponseBody ResponseEntity<MessageDTO> updateMessage(
-    @PathVariable Integer id,
-    @RequestBody MessageRequest request
-  ) {
-    MessageEntity messageEntity = messageRepository.findById(id).orElse(null);
-    if (messageEntity != null) {
+        messageRepository.save(messageEntity);
+      }
+    } else {
+      MessageEntity messageEntity = new MessageEntity();
       messageEntity.setPostedAt(LocalDateTime.now());
       messageEntity.setMessage(request.getContent());
 
-      MessageEntity savedMessage = messageRepository.save(messageEntity);
-
-      MessageDTO response = new MessageDTO(
-        savedMessage.getId(),
-        savedMessage.getPostedAt(),
-        savedMessage.getMessage()
-      );
-
-      return ResponseEntity.status(HttpStatus.OK).body(response);
+      messageRepository.save(messageEntity);
     }
-    return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(null);
+    
   }
+
+  // @PutMapping("/update/{id}")
+  // public @ResponseBody ResponseEntity<MessageDTO> updateMessage(
+  //   @PathVariable Integer id,
+  //   @RequestBody MessageRequest request
+  // ) {
+  //   MessageEntity messageEntity = messageRepository.findById(id).orElse(null);
+  //   if (messageEntity != null) {
+  //     messageEntity.setPostedAt(LocalDateTime.now());
+  //     messageEntity.setMessage(request.getContent());
+
+  //     MessageEntity savedMessage = messageRepository.save(messageEntity);
+
+  //     MessageDTO response = new MessageDTO(
+  //       savedMessage.getId(),
+  //       savedMessage.getPostedAt(),
+  //       savedMessage.getMessage()
+  //     );
+
+  //     return ResponseEntity.status(HttpStatus.OK).body(response);
+  //   }
+  //   return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(null);
+  // }
 
   @GetMapping(path = "/all")
   public @ResponseBody Iterable<MessageEntity> getAllMessages() {
