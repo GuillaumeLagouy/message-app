@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from './ui/card';
+import { formatDate } from '@/utils';
 
 interface MessageListProps {
   messages: Message[];
@@ -24,7 +25,7 @@ export default function MessageList({ messages, onEdit }: MessageListProps) {
         {messages.map((message) => (
           <Card key={message.id}>
             <CardHeader>
-              <CardTitle>{message.postedAt.toString()}</CardTitle>
+              <CardTitle>{formatDate(message.postedAt.toString())}</CardTitle>
             </CardHeader>
             <CardContent>
               <p>{message.message}</p>

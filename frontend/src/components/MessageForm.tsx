@@ -22,7 +22,10 @@ import { useEffect } from 'react';
 import { Message } from '@/types/MessageType';
 
 const formSchema = z.object({
-  content: z.string().min(1, { message: 'The content field is required' }),
+  content: z
+    .string()
+    .min(1, { message: 'The content field is required' })
+    .regex(/^[^<>]*$/, { message: 'HTML tags are not allowed' }),
 });
 
 interface MessageFormProps {
