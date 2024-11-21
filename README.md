@@ -5,7 +5,7 @@ It features a **React-based** frontend, an API service build with **Spring Boot*
 
 <br>
 
-> ## Install & Run
+## Install & Run
 ### 📦 Requirements
 - Git
 - Docker & docker-compose
@@ -22,7 +22,7 @@ Go to your [http://localhost:3000](http://localhost:3000) *et voilà*, you're re
 
 <br>
 
-> ## Containers descriptions
+## Containers descriptions
 | Container | Port | Images used | Notes |
 | ----------- | ----------- | ----------- |  ----------- |
 | frontend | 3000 | node:22-alpine | |
@@ -35,7 +35,7 @@ Go to your [http://localhost:3000](http://localhost:3000) *et voilà*, you're re
 
 <br>
 
-> ## Stack
+## Stack
 
 ### 🍛 Frontend
 - **Framework** : React
@@ -56,5 +56,5 @@ Go to your [http://localhost:3000](http://localhost:3000) *et voilà*, you're re
 
 <br>
 
-> ## Notes
+## Notes
 - **Kafka** is only used to **create a message**, not to edit it. An early implementation is available on the [fromHttpToKafka](https://github.com/GuillaumeLagouy/message-app/tree/fromHttpToKafka) branch of the Github repository, but the code doesn't work because of a deserialization or serialization problem.
